@@ -18,6 +18,7 @@ dist/
 
 # Ignore stupid .DS_Store
 .DS_Store
+db.sqlite3
 
 # Ignore benchmark results
 .benchmarks/
