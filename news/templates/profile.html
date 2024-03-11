@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {%load static%} {% load custom_filters %}
+<!-- profile.html -->
+
+{% block title %}Profile - Hacker News Clone{% endblock %} {% block navbar %}
+<div class="nav-item">
+  <a class="nav-link" href="{% url 'home'%}"><strong>Home</strong></a>
+</div>
+<div class="nav-item active">
+  <a class="nav-link" href="#"><strong>Profile</strong></a>
+</div>
+<div class="nav-item active">
+  <a class="nav-link login-register" href="{% url 'logout'%}"
+    ><strong>Logout</strong></a
+  >
+</div>
+{% endblock %} {% block content %}
+<div class="profile-info">
+  <h2>Welcome, {{ user.username }}!</h2>
+  <p>First Name: {{ user.first_name }}</p>
+  <p>Joined on: {{ user.date_joined|date:"F d, Y" }}</p>
+  <!-- Add other profile information as needed -->
+</div>
+
+<a href="{% url 'user_comments' username=user.username %}">Comments</a>
+
+
+<script src="{% static 'index.js' %}"></script>
+{% endblock %}
