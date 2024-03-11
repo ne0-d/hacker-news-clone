@@ -4,26 +4,6 @@
 <!-- index.html -->
 {% block title %}Hacker News{% endblock %}
 
-{% block navbar %}
-    <div class="nav-item active">
-        <a class="nav-link" href="#"><strong>Home</strong></a>
-    </div>
-    {% if user.is_authenticated %}
-    <div class="nav-item">
-        <a class="nav-link" href="{%url 'profile'%}"><strong>Profile</strong></a>
-    </div>
-    <div class="nav-item active">
-        <a class="nav-link login-register" href="{% url 'logout'%}"><strong>Logout</strong></a>
-    </div>
-    {% else %}
-    <div class="nav-item active">
-        <a class="nav-link login-register" href="{% url 'login'%}"><strong>Login</strong></a>
-    </div>
-    <div class="nav-item">
-        <a class="nav-link login-register" href="{%url 'signup'%}"><strong>Register</strong></a>
-    </div>
-    {% endif %}
-{% endblock %}
 
 {% block content %}
     <div class="welcome">
@@ -35,7 +15,7 @@
                     <span style="font-size: 14px; color: #828282">[{{ post.url|url_domain }}]</span>
                 </div>
                 <div class="post-details">
-                    Posted by {{ post.author.username }} | {{ post.pubDate|date:"F d, Y"}} |
+                    Posted by {{ post.author.username }} | {{ post.pubDate|humanize_time_difference }} ago |
                     <span class="comments-link" onclick="window.location.href='{{ post.get_absolute_url }}'">
                         {{ post.comment_set.count }} {{post.comment_set.count|pluralize:"comment" }}
                     </span>

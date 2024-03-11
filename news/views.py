@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout 
-from .forms import UserCreationForm, LoginForm, SignupForm
+from .forms import UserCreationForm, LoginForm, SignupForm, PostForm
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from django.contrib.auth.models import User
@@ -51,8 +51,23 @@ def user_comments(request, username):
     comments = Comment.objects.filter(author=user)
     return render(request, 'user_comments.html', {'user': user, 'comments': comments})
 
-def submit(request):
-    return HttpResponse("Here you can submit your posts but you need to login")
+def post_comments(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comments = Comment.objects.filter(post=post, parentComment__isnull=True)
+    return render(request, 'post_comments.html', {'post': post, 'comments': comments})
+
+@login_required(login_url='/login')
+def submit_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('home')
+    else:
+        form = PostForm()
+    return render(request, 'submit_post.html', {'form': form})
 
 def post(request, post_id):
     return HttpResponse("Post Page %s"% post_id)

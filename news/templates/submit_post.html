@@ -1,0 +1,16 @@
+<!-- submit_post.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Submit Post - Hacker News Clone{% endblock %}
+
+{% block content %}
+    <div class="submit-post">
+        <h2>Submit a New Post</h2>
+        <form method="post" action="{% url 'submit_post' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit Post</button>
+        </form>
+    </div>
+{% endblock %}

@@ -16,8 +16,28 @@
     <div class="navbar-cont">
         <h3>Hacker News Clone</h3>
         <div class="navbar-nav">
-            <!-- Add your navigation links here -->
-            {% block navbar %}{% endblock %}
+            <div class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}"><strong>Home</strong></a>
+            </div>
+            <div class="nav-item active">
+                <a class="nav-link" href="{% url 'submit_post' %}"><strong>Submit Post</strong></a>
+            </div>  
+            {% if user.is_authenticated %}
+            <div class="nav-item">
+                <a class="nav-link" href="{% url 'profile' %}"><strong>Profile</strong></a>
+            </div>
+            <div class="nav-item active">
+                <a class="nav-link login-register" href="{% url 'logout' %}"><strong>Logout</strong></a>
+            </div>
+            
+            {% else %}
+            <div class="nav-item active">
+                <a class="nav-link login-register" href="{% url 'login' %}"><strong>Login</strong></a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link login-register" href="{% url 'signup' %}"><strong>Register</strong></a>
+            </div>
+            {% endif %}
         </div>
     </div>
 

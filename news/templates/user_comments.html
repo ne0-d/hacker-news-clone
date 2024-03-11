@@ -4,18 +4,6 @@
 
 {% block title %}User Comments - Hacker News Clone{% endblock %}
 
-{% block navbar %}
-    <div class="nav-item">
-        <a class="nav-link" href="{% url 'home'%}"><strong>Home</strong></a>
-    </div>
-    <div class="nav-item">
-        <a class="nav-link" href="{% url 'profile'%}"><strong>Profile</strong></a>
-    </div>
-    <div class="nav-item active">
-        <a class="nav-link login-register" href="{% url 'logout'%}"><strong>Logout</strong></a>
-    </div>
-{% endblock %}
-
 {% block content %}
     <div class="user-comments">
         <h2>{{ user.username }}'s Comments</h2>
@@ -23,15 +11,25 @@
             {% for comment in comments %}
                 {% if comment.parentComment is null %}
                     <li>
-                        <strong>{{ comment.author.username }}</strong>: {{ comment.text }}
-                        <span class="comment-date">{{ comment.pubDate|date:"F d, Y" }}</span>
+                        <div class="comment-header">
+                            <strong>{{ comment.author.username }}</strong>
+                            <span class="comment-date">{{ comment.pubDate|humanize_time_difference }} ago</span>
+                        </div>
+                        <div class="comment-text">
+                            {{ comment.text }}
+                        </div>
                         {% with children=comment.comment_set.all %}
                             {% if children %}
                                 <ul class="nested-comments">
                                     {% for child_comment in children %}
                                         <li>
-                                            <strong>{{ child_comment.author.username }}</strong>: {{ child_comment.text }}
-                                            <span class="comment-date">{{ child_comment.pubDate|date:"F d, Y" }}</span>
+                                            <div class="comment-header">
+                                                <strong>{{ child_comment.author.username }}</strong>
+                                                <span class="comment-date">{{ child_comment.pubDate|humanize_time_difference }} ago</span>
+                                            </div>
+                                            <div class="comment-text">
+                                                {{ child_comment.text }}
+                                            </div>
                                         </li>
                                     {% endfor %}
                                 </ul>

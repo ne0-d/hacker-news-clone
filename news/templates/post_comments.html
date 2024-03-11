@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %} {% load custom_filters %}
+
+{% block title %}Post Comments - Hacker News Clone{% endblock %}
+
+{% block content %}
+    <div class="post-comments">
+        <h2>{{ post.title }} - Comments</h2>
+        <ul class="comment-list">
+            {% for comment in comments %}
+                <li>
+                    <div class="comment-header">
+                        <strong>{{ comment.author.username }}</strong>
+                        <span class="comment-date">{{ comment.pubDate|humanize_time_difference }} ago</span>
+                    </div>
+                    <div class="comment-text">
+                        {{ comment.text }}
+                    </div>
+                    {% with nested_comments=comment.comment_set.all %}
+                        {% if nested_comments %}
+                            <ul class="nested-comments">
+                                {% for nested_comment in nested_comments %}
+                                    <li>
+                                        <div class="comment-header">
+                                            <strong>{{ nested_comment.author.username }}</strong>
+                                            <span class="comment-date">{{ nested_comment.pubDate|humanize_time_difference }} ago</span>
+                                        </div>
+                                        <div class="comment-text">
+                                            {{ nested_comment.text }}
+                                        </div>
+                                        {% with nested_nested_comments=nested_comment.comment_set.all %}
+                                            {% if nested_nested_comments %}
+                                                <ul class="nested-nested-comments">
+                                                    {% for nested_nested_comment in nested_nested_comments %}
+                                                        <li>
+                                                            <div class="comment-header">
+                                                                <strong>{{ nested_nested_comment.author.username }}</strong>
+                                                                <span class="comment-date">{{ nested_nested_comment.pubDate|humanize_time_difference }} ago</span>
+                                                            </div>
+                                                            <div class="comment-text">
+                                                                {{ nested_nested_comment.text }}
+                                                            </div>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% if nested_nested_comments.count > 0 %}
+                                                    <p class="additional-comments-count">
+                                                        {{ nested_nested_comments.count }} more nested comments below level 2...
+                                                    </p>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endwith %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            {% if nested_comments.count > 0 %}
+                                <p class="additional-comments-count">
+                                    {{ nested_comments.count }} more nested comments below level 2...
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                    {% endwith %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
