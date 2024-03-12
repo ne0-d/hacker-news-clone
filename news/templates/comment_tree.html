@@ -1,0 +1,19 @@
+{% load static %} {% load custom_filters %}
+{% for comment in comments %}
+    <li>
+        <div class="comment-header">
+            <strong> <a href="{% url 'general_profile'  username=comment.author.username %}"> {{comment.author.username}}</a></strong>
+            <span class="comment-date">{{ comment.pubDate|humanize_time_difference }} ago</span>
+        </div>
+        <div class="comment-text">
+            {{ comment.text }}
+        </div>
+        {% with nested_comments=comment.comment_set.all %}
+            {% if nested_comments %}
+                <ul class="nested-comments">
+                    {% include 'comment_tree.html' with comments=nested_comments %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </li>
+{% endfor %}

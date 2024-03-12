@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {%load static%} {% load custom_filters %}
+<!-- profile.html -->
+
+{% block title %}Profile - Hacker News Clone{% endblock %} {% block content %}
+<div class="profile-info">
+  <h2>{{ user.username }}'s Profile</h2>
+  <p>First Name: {{ user.first_name|default:"--" }}</p>
+  <p>Last Name: {{ user.last_name|default:"--" }}</p>
+  <p>Joined on: {{ user.date_joined|date:"F d, Y" }}</p>
+  <!-- Add other profile information as needed -->
+</div>
+
+<a href="{% url 'user_comments' username=user.username %}">Comments</a>
+
+<script src="{% static 'index.js' %}"></script>
+{% endblock %}

@@ -46,6 +46,12 @@ def user_profile(request):
     print(comments)
     return render(request, 'profile.html', {'user': user, 'comments': comments})
 
+def general_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    comments = Comment.objects.filter(author=user)
+    print(comments)
+    return render(request, 'general_profile.html', {'user': user, 'comments': comments})
+
 def user_comments(request, username):
     user = get_object_or_404(User, username=username)
     comments = Comment.objects.filter(author=user)
