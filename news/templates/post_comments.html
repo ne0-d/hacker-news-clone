@@ -1,13 +1,33 @@
+<!-- post_comments.html -->
 {% extends 'base.html' %}
-{% load static %} {% load custom_filters %}
+{% load static %} 
+{% load custom_filters %}
 
 {% block title %}Post Comments - Hacker News Clone{% endblock %}
 
 {% block content %}
+    <div class="post">
+                <div class="post-title">
+                    <a href="{{ post.url }}" class="post-title" target="_blank" rel="noopener noreferrer">{{ post.title }}</a>
+                    <span style="font-size: 14px; color: #828282">[{{ post.url|url_domain }}]</span>
+                </div>
+                <div class="post-details">
+                    Posted by <a href="{% url 'general_profile'  username=post.author.username %}"> {{post.author.username}}</a> | {{ post.pubDate|humanize_time_difference }} ago |
+                    <span class="comments-link" onclick="window.location.href='{{ post.get_absolute_url }}'">
+                        {{ post.comment_set.count }} {{post.comment_set.count|pluralize:"comment" }}
+                    </span>
+                </div>
+            </div>
+
     <div class="post-comments">
-        <h2>{{ post.title }} - Comments</h2>
+        <form method="post" action="{% url 'post_comments' post_id=post.id %}">
+            {% csrf_token %}
+            {{  form.as_p }}
+            <button type="submit", class="btn btn-outline-dark btn-sm">Submit Comment</button> 
+        </form>
+        
         <ul class="comment-list">
-            {% include 'comment_tree.html' with comments=comments %}
+            {% include 'comment_tree.html' with comments=comments_dict %}
         </ul>
     </div>
 {% endblock %}

@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+{% load static %} {% load custom_filters %}
+{% block title %} Replying to {% endblock %}
+
+{% block content %}
+    <div class='reply-comments'>
+        <div class="comment-header">
+            <strong> <a href="{% url 'general_profile'  username=parent_comment.author.username %}"> {{parent_comment.author.username}}</a></strong>
+            <span class="comment-date">{{ parent_comment.pubDate|humanize_time_difference }} ago</span>
+        </div>
+        <div class="comment-text">
+            {{ parent_comment.text }}
+        </div>
+        <form method="post" action="{% url 'submit_reply' comment_id=parent_comment.id %}">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit", class="btn btn-primary">Submit Reply</button>
+        </form>
+
+    </div>
+{% endblock %}

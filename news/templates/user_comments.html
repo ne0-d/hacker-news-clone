@@ -2,14 +2,14 @@
 {% extends 'base.html' %}
 {%load static%} {% load custom_filters %}
 
-{% block title %}User Comments - Hacker News Clone{% endblock %}
+{% block title %}{{ user.username }}'s Comments - Hacker News Clone{% endblock %}
 
 
 {% block content %}
     <div class="post-comments">
         <h2>{{ user.username }}'s Comments</h2>
         <ul class="comment-list">
-            {% include 'comment_tree.html' with comments=comments %}
+            {% include 'comment_tree.html' with comments=comments_dict %}
         </ul>
     </div>
 {% endblock %}

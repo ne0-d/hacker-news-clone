@@ -76,3 +76,42 @@ footer {
     text-align: center;
     color: #828282;
 }
+
+.post-comments{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+}
+.reply-link{
+    
+    padding: 0.2rem;
+   
+    font-size: 14px;
+    text-decoration: underline;
+}
+.comment-text{
+    margin:0;
+}
+a, .comments-link{
+    color: #494747;
+}
+a:hover, .comments-link:hover{
+    color: #494747;
+    text-decoration: underline;
+}
+
+.comment-header{
+    color: #828282;
+    font-size: 15px;
+}
+.grey{
+    color: #828282;
+}
+
+.profile-comment-title{
+    color: blue;
+}
+.profile-comment-title:hover{
+    color: blue;
+}
