@@ -10,7 +10,8 @@
   <!-- Add other profile information as needed -->
 </div>
 
-<a href="{% url 'user_comments' username=user.username %}">Comments</a>
-
+<a href="{% url 'user_comments' username=user.username %}" class="profile-comment-title">Comments</a>
+<br/>
+<a href="{% url 'user_posts' username=user.username %}" class="profile-comment-title">Posts</a>
 <script src="{% static 'index.js' %}"></script>
 {% endblock %}

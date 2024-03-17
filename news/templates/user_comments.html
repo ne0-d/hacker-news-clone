@@ -9,7 +9,17 @@
     <div class="post-comments">
         <h2>{{ user.username }}'s Comments</h2>
         <ul class="comment-list">
-            {% include 'comment_tree.html' with comments=comments_dict %}
+            {% include 'comment_tree.html' with comments=page_obj.object_list %}
         </ul>
     </div>
+    <center>
+        {%if page_obj.has_previous %} 
+            <a href="?page={{page_obj.previous_page_number}}" class="page-arrow">&laquo; Prev</a> 
+        {% endif %}
+        <span>{{page_obj.number}}</span> 
+       
+        {%if page_obj.has_next %} 
+            <a href="?page={{page_obj.next_page_number}}" class="page-arrow"> Next&raquo;</a> 
+        {% endif %}
+    </center>
 {% endblock %}

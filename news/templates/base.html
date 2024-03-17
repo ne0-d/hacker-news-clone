@@ -14,7 +14,10 @@
 </head>
 <body>
     <div class="navbar-cont">
-        <h3>Hacker News Clone</h3>
+        <a class="nav-link nav-header" href="{% url 'home' %}"><strong>
+            <h3 class="nav-header">Hacker News Clone</h3>
+        </strong></a>
+       
         <div class="navbar-nav">
             <div class="nav-item active">
                 <a class="nav-link" href="{% url 'home' %}"><strong>Home</strong></a>
@@ -23,11 +26,9 @@
                 <a class="nav-link" href="{% url 'submit_post' %}"><strong>Submit Post</strong></a>
             </div>  
             {% if user.is_authenticated %}
-            <div class="nav-item">
-                <a class="nav-link" href="{% url 'profile' %}"><strong>Profile</strong></a>
-            </div>
             <div class="nav-item active">
-                <a class="nav-link login-register" href="{% url 'logout' %}"><strong>Logout</strong></a>
+                <a class="nav-link" href="{% url 'general_profile' user.username%}" ><strong class="nav-username">{{user.username}} </strong></a>
+                <a class="nav-link login-register" href="{% url 'logout' %}"><strong> Logout</strong></a>
             </div>
             
             {% else %}

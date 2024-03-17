@@ -8,20 +8,29 @@
 {% block content %}
     <div class="welcome">
         <div class="card">
-            {% for post in posts %}
+            {% for post in page_obj.object_list %}
             <div class="post">
                 <div class="post-title">
                     <a href="{{ post.url }}" target="_blank" rel="noopener noreferrer">{{ post.title }}</a>
-                    <span style="font-size: 14px; color: #828282">[{{ post.url|url_domain }}]</span>
+                    <span style="font-size: 14px; color: #828282" >[{{ post.url|url_domain }}]</span>
                 </div>
                 <div class="post-details">
-                    Posted by <a href="{% url 'general_profile'  username=post.author.username %}"> {{post.author.username}}</a> | {{ post.pubDate|humanize_time_difference }} ago |
-                    <span class="comments-link" onclick="window.location.href='{{ post.get_absolute_url }}'">
-                        {{ post.comment_set.count }} {{post.comment_set.count|pluralize:"comment" }}
-                    </span>
+                    Posted by <a href="{% url 'general_profile'  username=post.author.username %}">{{ post.author.username }}</a> | 
+                    <span class="pub-date show-hover-time" title="{{ post.pubDate }}" >{{ post.pubDate|humanize_time_difference }}</span> ago |
+                    <span class="comments-link" onclick="window.location.href='{{ post.get_absolute_url }}'">{{ post.comment_set.count }} {{ post.comment_set.count|pluralize:"comment" }}</span>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+    <center>
+        {%if page_obj.has_previous %}
+            <a href="?page={{page_obj.previous_page_number}}" class="page-arrow">&laquo; Prev</a> 
+        {% endif %}
+        <span>{{page_obj.number}}</span> 
+       
+        {%if page_obj.has_next %} 
+            <a href="?page={{page_obj.next_page_number}}" class="page-arrow">Next &raquo;</a>
+        {% endif %}
+    </center>
 {% endblock %}

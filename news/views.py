@@ -7,11 +7,26 @@ from .models import Post, Comment
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
+
+
+def create_pagination(request, obj_list, per_page):
+    p = Paginator(obj_list, per_page)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = p.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = p.page(1)
+    except EmptyPage:
+        page_obj = p.page(p.num_pages)
+    return page_obj
 
 def home(request):
     posts = Post.objects.all().order_by('-pubDate')
-    return render(request, 'index.html', {'posts': posts})
+    
+    page_obj = create_pagination(request, posts, 2)
+    return render(request, 'index.html', {'page_obj':page_obj})
 
 
 def user_login(request):
@@ -45,24 +60,24 @@ def user_logout(request):
     return redirect('home')
 
 
-def user_profile(request):
-    user = request.user
-    comments = Comment.objects.filter(author=user).order_by('-pubDate')
-    print(comments)
-    return render(request, 'profile.html', {'user': user, 'comments': comments})
-
-
 def general_profile(request, username):
     user = get_object_or_404(User, username=username)
     comments = Comment.objects.filter(author=user).order_by('-pubDate')
-    return render(request, 'general_profile.html', {'user': user, 'comments': comments})
+    return render(request, 'general_profile.html', {'user': user})
 
 
 def user_comments(request, username):
     user = get_object_or_404(User, username=username)
-    comments = Comment.objects.select_related('author').filter(author=user).order_by('-pubDate')
+    comments = Comment.objects.filter(author=user).order_by('-pubDate')
     comments_dict = [get_comment_dict(comment) for comment in comments]
-    return render(request, 'user_comments.html', {'user': user, 'comments': comments, 'comments_dict': comments_dict})
+    page_obj = create_pagination(request, comments_dict, 2)
+    return render(request, 'user_comments.html', {'user': user, 'comments': comments, 'page_obj':page_obj})
+
+def user_posts(request, username):
+    user = get_object_or_404(User, username=username)
+    posts = Post.objects.select_related('author').filter(author=user).order_by('-pubDate')
+    page_obj = create_pagination(request, posts, 2)
+    return render(request, 'user_posts.html', {'user': user, 'page_obj': page_obj})
 
 
 def get_comment_dict(comment):
@@ -80,7 +95,7 @@ def post_comments(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = Comment.objects.select_related('author').filter(post=post, parentComment__isnull=True).order_by('-pubDate')
     comments_dict = [get_comment_dict(comment) for comment in comments]
-    
+    page_obj = create_pagination(request, comments_dict, 3)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -95,7 +110,7 @@ def post_comments(request, post_id):
                 return redirect('login')
     else:
         form = CommentForm()
-    return render(request, 'post_comments.html', {'post': post, 'comments_dict': comments_dict, 'form': form})
+    return render(request, 'post_comments.html', {'post': post, 'page_obj': page_obj, 'form': form})
 
 
 @login_required(login_url='/login')
