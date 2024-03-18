@@ -13,14 +13,33 @@
                 {% for post in page_obj.object_list %}
                 <div class="post">
                     <div class="post-title">
+                        {% if post.flag_count > 0 %}
+            <span class="flag-indicator" title="This post has been flagged">🛑</span>
+        {% endif %}
                         <a href="{{ post.url }}" target="_blank" rel="noopener noreferrer">{{ post.title }}</a>
                         <span style="font-size: 14px; color: #828282">[{{ post.url|url_domain }}]</span>
                     </div>
                     <div class="post-details">
                         Posted by <a href="{% url 'general_profile'  username=post.author.username %}"> {{post.author.username}}</a> | {{ post.pubDate|humanize_time_difference }} ago |
-                        <span class="comments-link" onclick="window.location.href='{{ post.get_absolute_url }}'">
-                            {{ post.comment_set.count }} {{post.comment_set.count|pluralize:"comment" }}
-                        </span>
+                        {% if request.user.is_authenticated %}
+                    <form action="{% url 'toggle_flag_post' post.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">
+                            {% if request.user in post.flagged_users.all %}
+                                Unflag
+                            {% else %}
+                                Flag
+                            {% endif %}
+                        </button>
+                    </form>
+                {% endif %}
+                
+                Flag Count: {{ post.flag_count }} | <a href="{% url 'post_comments' post_id=post.id %}">
+                    {% if post.comment_set.count == 1 %}
+                        1 comment
+                    {% else %}
+                        {{ post.comment_set.count }} comments
+                    {% endif %}
                     </div>
                 </div>
                 {% endfor %}

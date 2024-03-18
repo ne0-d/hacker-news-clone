@@ -11,6 +11,8 @@ urlpatterns = [
     path("user-comments/<str:username>/", views.user_comments, name="user_comments"),
     path("user-posts/<str:username>/", views.user_posts, name="user_posts"),
     path("post/<int:post_id>/comments/", views.post_comments, name="post_comments"),
-    path('comment/<int:comment_id>/submit_reply', views.submit_reply, name='submit_reply')
+    path('comment/<int:comment_id>/submit_reply', views.submit_reply, name='submit_reply'),
+    path('edit-comment/<int:comment_id>/', views.edit_comment, name='edit_comment'),
+    path('toggle_flag_post/<int:post_id>/', views.toggle_flag_post, name='toggle_flag_post'),
 
 ]

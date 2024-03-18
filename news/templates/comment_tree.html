@@ -5,13 +5,24 @@
         <div class="comment-header">
             <strong> <a href="{% url 'general_profile'  username=comment.username %}"> {{comment.username}} |</a></strong>
             <span class="comment-date"> {{ comment.pubDate|humanize_time_difference }} ago</span>
+            {% if comment.lastUpdated %}
+                <span class="last-updated">Last updated: {{ comment.lastUpdated|humanize_time_difference }} ago</span>
+            {% endif %}
+            {% if request.user.id == comment.author %}
+                {% if comment.pubDate|calculate_time_difference <= ALLOWED_EDIT_SECONDS %}
+                    <a href="{% url 'edit_comment' comment_id=comment.id %}" class="edit-comment">Edit</a>
+                {% endif %}
+            {% endif %}
         </div>
         <div class="comment-text">
             {{ comment.text }}
         </div>
-        <a href="{% url 'submit_reply' comment_id=comment.id %}" class='reply-link'>
-            reply
-        </a>
+        <div class="edit-reply-class">
+            <a href="{% url 'submit_reply' comment_id=comment.id %}" class='reply-link'>
+                reply
+            </a>
+            
+        </div>
         {% if comment.child_comments %}
             <ul class="nested-comments">
                 {% include 'comment_tree.html' with comments=comment.child_comments %}
