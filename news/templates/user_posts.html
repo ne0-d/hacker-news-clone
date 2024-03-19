@@ -13,7 +13,7 @@
                 {% for post in page_obj.object_list %}
                 <div class="post">
                     <div class="post-title">
-                        {% if post.flag_count > 0 %}
+                        {% if post.flag_count >= MIN_FLAG_COUNT %}
             <span class="flag-indicator" title="This post has been flagged">🛑</span>
         {% endif %}
                         <a href="{{ post.url }}" target="_blank" rel="noopener noreferrer">{{ post.title }}</a>
@@ -25,7 +25,7 @@
                     <form action="{% url 'toggle_flag_post' post.id %}" method="post" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit">
-                            {% if request.user in post.flagged_users.all %}
+                            {% if post.is_flagged_by_user and request.user != post.author %}
                                 Unflag
                             {% else %}
                                 Flag
@@ -39,7 +39,7 @@
                         1 comment
                     {% else %}
                         {{ post.comment_set.count }} comments
-                    {% endif %}
+                    {% endif %} </a>
                     </div>
                 </div>
                 {% endfor %}

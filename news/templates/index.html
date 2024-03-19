@@ -17,11 +17,11 @@
                 Posted by <a href="{% url 'general_profile' username=post.author.username %}">{{ post.author.username }}</a> | 
                 <span class="pub-date show-hover-time" title="{{ post.pubDate }}">{{ post.pubDate|humanize_time_difference }}</span> ago |
                 
-                {% if request.user.is_authenticated %}
+                {% if request.user.is_authenticated and request.user != post.author %}
                     <form action="{% url 'toggle_flag_post' post.id %}" method="post" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit">
-                            {% if request.user in post.flagged_users.all %}
+                            {% if post.is_flagged_by_user %}
                                 Unflag
                             {% else %}
                                 Flag
@@ -35,7 +35,7 @@
                         1 comment
                     {% else %}
                         {{ post.comment_set.count }} comments
-                    {% endif %}
+                    {% endif %} </a>
             </div>
         {% endfor %}
     </div>

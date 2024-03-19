@@ -8,9 +8,9 @@ class Post(models.Model):
     title = models.CharField(max_length=250)
     url = models.TextField()
     pubDate = models.DateTimeField("published_date", default=timezone.localtime(timezone.now()))
-    flagged_users = models.ManyToManyField(User, related_name='flagged_posts', blank=True)
+    flagged_by_users = models.ManyToManyField(User, related_name='flagged_posts', blank=True)
     def flag_count(self):
-        return self.flagged_users.count()
+        return self.flagged_by_users.count()
     def get_absolute_url(self):
         return reverse('post_comments', args=[str(self.id)])
    

@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout 
-from .forms import UserCreationForm, LoginForm, SignupForm, PostForm, CommentForm
+from .forms import UserCreationForm, LoginForm, SignupForm, PostForm, CommentForm, EditComment
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from django.contrib.auth.models import User
@@ -25,7 +25,10 @@ def create_pagination(request, obj_list, per_page):
     return page_obj
 
 def home(request):
-    posts = Post.objects.annotate(flag_count=Count('flagged_users')).filter(flag_count__lt=settings.MIN_FLAG_COUNT)
+    posts = Post.objects.annotate(flag_count=Count('flagged_by_users')).filter(flag_count__lt=settings.MIN_FLAG_COUNT)
+    for post in posts:
+        post.is_flagged_by_user = request.user in post.flagged_by_users.all()
+    
     page_obj = create_pagination(request, posts, 5)
     context = {
         'page_obj': page_obj,
@@ -81,8 +84,12 @@ def user_comments(request, username):
 def user_posts(request, username):
     user = get_object_or_404(User, username=username)
     posts = Post.objects.select_related('author').filter(author=user).order_by('-pubDate')
+    for post in posts:
+        post.is_flagged_by_user = request.user in post.flagged_by_users.all()
+
     page_obj = create_pagination(request, posts, 10)
-    return render(request, 'user_posts.html', {'user': user, 'page_obj': page_obj, 'ALLOWED_EDIT_SECONDS':settings.ALLOWED_EDIT_SECONDS})
+    print(settings.ALLOWED_EDIT_SECONDS)
+    return render(request, 'user_posts.html', {'user': user, 'page_obj': page_obj, 'ALLOWED_EDIT_SECONDS':settings.ALLOWED_EDIT_SECONDS, 'MIN_FLAG_COUNT': settings.MIN_FLAG_COUNT})
 
 
 def get_comment_dict(comment):
@@ -158,31 +165,26 @@ def edit_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     if request.user == comment.author:  
         if request.method == 'POST':
-            form = CommentForm(request.POST, instance=comment)
+            form = EditComment(request.POST, instance=comment)
             if form.is_valid():
-                time_difference = timezone.now() - comment.pubDate
-                if time_difference.total_seconds() <= settings.ALLOWED_EDIT_SECONDS:  
-                    comment.lastUpdated = timezone.now()
-                    form.save()
-                    messages.success(request, 'Comment updated successfully')
-                    return redirect('post_comments', post_id=comment.post.id)
-                else:
-                    messages.error(request, 'Comment can only be edited within 5 minutes')
-            else:
-                messages.error(request, 'Invalid form submission. Please correct the errors.')
+                comment.lastUpdated = timezone.now()
+                form.save()
+                messages.success(request, 'Comment updated successfully')
+                return redirect('post_comments', post_id=comment.post.id)
         else:
-            form = CommentForm(instance=comment)
+            form = EditComment(instance=comment)
         return render(request, 'edit_comment.html', {'form': form, 'comment': comment})
     else:
         messages.error(request, 'You are not authorized to edit this comment')
         return redirect('post_comments', post_id=comment.post.id)
 
+
 @login_required
 def toggle_flag_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     user = request.user
-    if user in post.flagged_users.all():
-        post.flagged_users.remove(user)
+    if user in post.flagged_by_users.all():
+        post.flagged_by_users.remove(user)
     else:
-        post.flagged_users.add(user)
+        post.flagged_by_users.add(user)
     return redirect('home')

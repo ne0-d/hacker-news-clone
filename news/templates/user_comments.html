@@ -1,25 +1,26 @@
 <!-- user_comments.html -->
-{% extends 'base.html' %}
-{%load static%} {% load custom_filters %}
+{% extends 'base.html' %} {%load static%} {% load custom_filters %} {% block
+title %}{{ user.username }}'s Comments - Hacker News Clone{% endblock %} {%
+block content %}
+<div class="post-comments">
+  <h2>{{ user.username }}'s Comments</h2>
+  <ul class="comment-list">
+    {% include 'comment_tree.html' with comments=page_obj.object_list
+    ALLOWED_EDIT_SECONDS=ALLOWED_EDIT_SECONDS %}
+  </ul>
+</div>
+<center>
+  {%if page_obj.has_previous %}
+  <a href="?page={{page_obj.previous_page_number}}" class="page-arrow"
+    >&laquo; Prev</a
+  >
+  {% endif %}
+  <span>{{page_obj.number}}</span>
 
-{% block title %}{{ user.username }}'s Comments - Hacker News Clone{% endblock %}
-
-
-{% block content %}
-    <div class="post-comments">
-        <h2>{{ user.username }}'s Comments</h2>
-        <ul class="comment-list">
-            {% include 'comment_tree.html' with comments=page_obj.object_list ALLOWED_EDIT_SECONDS=ALLOWED_EDIT_SECONDS %}
-        </ul>
-    </div>
-    <center>
-        {%if page_obj.has_previous %} 
-            <a href="?page={{page_obj.previous_page_number}}" class="page-arrow">&laquo; Prev</a> 
-        {% endif %}
-        <span>{{page_obj.number}}</span> 
-       
-        {%if page_obj.has_next %} 
-            <a href="?page={{page_obj.next_page_number}}" class="page-arrow"> Next&raquo;</a> 
-        {% endif %}
-    </center>
+  {%if page_obj.has_next %}
+  <a href="?page={{page_obj.next_page_number}}" class="page-arrow">
+    Next&raquo;</a
+  >
+  {% endif %}
+</center>
 {% endblock %}
