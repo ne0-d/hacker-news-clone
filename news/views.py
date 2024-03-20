@@ -70,7 +70,6 @@ def user_logout(request):
 
 def general_profile(request, username):
     user = get_object_or_404(User, username=username)
-    comments = Comment.objects.filter(author=user).order_by('-pubDate')
     return render(request, 'general_profile.html', {'user': user})
 
 
