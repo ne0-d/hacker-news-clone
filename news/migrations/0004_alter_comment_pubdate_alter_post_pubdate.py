@@ -7,18 +7,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('news', '0003_alter_comment_pubdate_alter_comment_text_and_more'),
+        ("news", "0003_alter_comment_pubdate_alter_comment_text_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='comment',
-            name='pubDate',
-            field=models.DateTimeField(default=datetime.datetime(2024, 3, 13, 11, 54, 44, 265972, tzinfo=datetime.timezone.utc), verbose_name='published_date'),
+            model_name="comment",
+            name="pubDate",
+            field=models.DateTimeField(
+                default=datetime.datetime(
+                    2024, 3, 13, 11, 54, 44, 265972, tzinfo=datetime.timezone.utc
+                ),
+                verbose_name="published_date",
+            ),
         ),
         migrations.AlterField(
-            model_name='post',
-            name='pubDate',
-            field=models.DateTimeField(default=datetime.datetime(2024, 3, 13, 11, 54, 44, 265504, tzinfo=datetime.timezone.utc), verbose_name='published_date'),
+            model_name="post",
+            name="pubDate",
+            field=models.DateTimeField(
+                default=datetime.datetime(
+                    2024, 3, 13, 11, 54, 44, 265504, tzinfo=datetime.timezone.utc
+                ),
+                verbose_name="published_date",
+            ),
         ),
     ]

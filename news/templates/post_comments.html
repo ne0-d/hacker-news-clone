@@ -27,7 +27,7 @@
             </div>
 
     <div class="post-comments">
-        <form method="post" action="{% url 'post_comments' post_id=post.id %}">
+        <form method="post" action="{% url 'post_comments' post_id=post.id%}?next={{ request.get_full_path }}">
             {% csrf_token %}
             {{  form.as_p }}
             <button type="submit", class="btn btn-outline-dark btn-sm">Submit Comment</button> 

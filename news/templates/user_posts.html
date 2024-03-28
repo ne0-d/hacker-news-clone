@@ -35,10 +35,10 @@
                 {% endif %}
                 
                 <a href="{% url 'post_comments' post_id=post.id %}">
-                    {% if post.comment_set.count == 1 %}
+                    {% if post.comment_count == 1 %}
                         1 comment
                     {% else %}
-                        {{ post.comment_set.count }} comments
+                        {{ post.comment_count }} comments
                     {% endif %} </a>
                     </div>
                 </div>

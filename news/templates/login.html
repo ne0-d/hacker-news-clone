@@ -1,5 +1,12 @@
 {% extends 'base.html' %} 
  {% block content %}
+ {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
  <h1>Login</h1>
 <form method="POST">
     {% csrf_token %}

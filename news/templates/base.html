@@ -25,10 +25,15 @@
                 <a class="nav-link" href="{% url 'submit_post' %}"><strong>Submit Post</strong></a>
             </div>  
             {% if request.user.is_authenticated %}
-            <div class="nav-item active">
+            
                 <a class="nav-link" href="{% url 'general_profile' user.username%}" ><strong class="nav-username">{{request.user.username}} </strong></a>
-                <a class="nav-link login-register" href="{% url 'logout' %}"><strong> Logout</strong></a>
-            </div>
+                <div>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                </div>
+            
             
             {% else %}
             <div class="nav-item active">

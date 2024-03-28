@@ -32,9 +32,21 @@ body {
     display: inline-block;
 }
 
+.logout-button{
+    border: none;
+    background-color: #ff6600;
+    color: #fff;
+    font-weight: bold;
+
+}
+.logout-button:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
 
 .nav-item {
     margin-right: 20px;
+   
 }
 
 .nav-username {
